@@ -1,0 +1,16 @@
+Usage: run [COMMAND ...]
+
+Run Mooshak related operations in a docker container.
+
+Positional arguments:
+  COMMAND          The command to run. (default: help)
+
+Commands:
+  help             Show this help message
+  startservices    Start the apache web services
+  cli              Drop into a bash shell
+
+  
+  Example:
+  docker run startservices
+  
