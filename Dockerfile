@@ -7,7 +7,7 @@ FROM phusion/baseimage:0.9.17
 MAINTAINER Thejesh GN <i@thejeshgn.com>
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -y && apt-get install -y \
 	vim \
 	gcc \
 	make \
@@ -18,18 +18,26 @@ RUN apt-get update && apt-get install -y \
 	lpr \
 	time \
 	host \
+	wget \
+	rsync \
+	time \
+	gnuspool \
+	diffutils \
+	gnome-schedule \
+	file \
+	xsltproc \
+	libxml2-utils \
+	nano \
+	lynx 
 
-# Install more dependencies
-RUN cd ~ && wget ftp://xmlsoft.org/libxml2/libxml2-2.9.1.tar.gz
-RUN cd ~ && tar xzf libxml2-2.9.1.tar.gz && cd ~/libxml2-2.9.1 && \
-		./configure  && \
-		make && make install
-RUN ln -s /usr/local/bin/xmllint /usr/bin/xmllint
+RUN cd /etc/apache2/mods-enabled && sudo ln -s ../mods-available/userdir.conf &&\
+	sudo ln -s ../mods-available/userdir.load \
+	sudo ln -s ../mods-available/suexec.load	
 
 # Install mooshak
-RUN cd ~ && wget --no-check-certificate http://mooshak.dcc.fc.up.pt/download/mooshak-1.6b15.tgz
-RUN cd ~ && tar xzf mooshak.tgz && cd ~/mooshak-1.6b13 && \
-		./install --user mooshak --install
+#RUN cd ~ && wget --no-check-certificate http://mooshak.dcc.fc.up.pt/download/mooshak-1.6.2.tgz
+#RUN cd ~ && tar xzf mooshak-1.6.2.tgz && cd ~/mooshak-1.6.2 && \
+#		./install --user mooshak --install
 
 # Clean up APT when done
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -54,10 +62,12 @@ RUN cat /tmp/your_key.pub >> /root/.ssh/authorized_keys && rm -f /tmp/your_key.p
 
 
 
-
 # Add the entrypoint
-ADD run.sh /usr/local/sbin/run
-ENTRYPOINT ["/sbin/my_init", "--", "/usr/local/sbin/run"]
+#ADD run.sh /usr/local/sbin/run
+#ADD run.sh /etc/service/run
+
+#ENTRYPOINT ["/sbin/my_init", "--", "/usr/local/sbin/run"]
 
 # Default to showing the usage text
-CMD ["help"]
+#CMD ["help"]
+CMD ["/sbin/my_init"]
